@@ -19,8 +19,9 @@ public:
     OverlayItemImpl(uint64_t handle)
         : m_overlayHandle(handle), m_overlay(vr::VROverlay())
     {
-        m_overlay->SetOverlayAlpha(m_overlayHandle, 0.5f);
+        m_overlay->SetOverlayAlpha(m_overlayHandle, 1.0f);
         m_overlay->SetOverlayColor(m_overlayHandle, 1.0f, 1.0f, 1.0f);
+        m_overlay->ShowOverlay(m_overlayHandle);
     }
 
     ~OverlayItemImpl()

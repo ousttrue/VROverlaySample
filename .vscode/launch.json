@@ -19,6 +19,22 @@
                 }
             ],
             "externalConsole": false
+        },
+        {
+            "name": "desktopdup",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/desktopdup/desktopdup.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${workspaceFolder}/_externals/openvr/bin/win64"
+                }
+            ],
+            "externalConsole": false
         }
-    ]
+   ]
 }
