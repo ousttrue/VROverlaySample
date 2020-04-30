@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <wrl/client.h>
 #include <iostream>
+#include <DirectXMath.h>
 
 namespace vrutil
 {
@@ -85,17 +86,20 @@ public:
     void Show() { m_overlay->ShowOverlay(m_overlayHandle); }
 
     void AxisAnglePosition(const gsl::span<float> &axis, float angle,
-                           const gsl::span<float> &postion)
+                           const gsl::span<float> &position)
     {
+        using namespace DirectX;
         // todo: rotation
-        float matrix34[] = {
-            1, 0, 0, postion[0], //
-            0, 1, 0, postion[1], //
-            0, 0, 1, postion[2], //
-        };
+        auto m = XMMatrixTranspose(
+            XMMatrixRotationAxis(XMLoadFloat3((XMFLOAT3 *)axis.data()), XMConvertToRadians(angle)));
+        XMFLOAT4X4 matrix44;
+        XMStoreFloat4x4(&matrix44, m);
+        matrix44._14 = position[0];
+        matrix44._24 = position[1];
+        matrix44._34 = position[2];
         m_overlay->SetOverlayTransformAbsolute(m_overlayHandle,
                                                vr::TrackingUniverseStanding,
-                                               (vr::HmdMatrix34_t *)&matrix34);
+                                               (vr::HmdMatrix34_t *)&matrix44);
     }
 }; // namespace vrutil
 

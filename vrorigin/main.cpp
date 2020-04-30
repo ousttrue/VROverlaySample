@@ -35,28 +35,38 @@ int main(int argc, char **argv)
         return 2;
     }
 
-    auto item = app.CreateOverlay("vr_origin", "vr_origin");
-    uint8_t pixels[] = {
+    auto xAxis = app.CreateOverlay("x_axis", "x_axis");
+    uint8_t xPixels[] = {
         255, 255, 255, 255, // 00
-        255, 255, 255, 255, // 10
-        255, 255, 255, 255, // 01
-        255, 255, 255, 255, // 11
+        255, 0,   0,   255, // 10
     };
+    auto xTexture = d3d.CreateStaticTexture(2, 1, xPixels);
+    xAxis->Show();
+    xAxis->SetOverlayWidthInMeters(0.4f);
 
-    auto texture = d3d.CreateStaticTexture(2, 2, pixels);
-    item->Show();
-    item->SetOverlayWidthInMeters(1.0f);
+    auto zAxis = app.CreateOverlay("z_axis", "z_axis");
+    uint8_t zPixels[] = {
+        255, 255, 255, 255, // 00
+        0,   0,   255, 255, // 10
+    };
+    auto zTexture = d3d.CreateStaticTexture(2, 1, zPixels);
+    zAxis->Show();
+    zAxis->SetOverlayWidthInMeters(0.4f);
+
     float axis[] = {0, 1, 0};
-    float position[] = {0, 0, 0};
-    item->AxisAnglePosition(axis, 0, position);
+    float position[] = {0, 0.1f, 0}; // 0.4f/2/2
+    xAxis->AxisAnglePosition(axis, 0, position);
+    zAxis->AxisAnglePosition(axis, 90, position);
 
     // main loop
     FpsTimer timer(80);
     while (true)
     {
         timer.NewFrame();
-        item->ProcessEvents();
-        item->SetTexture(texture); // require each frame ?
+        xAxis->ProcessEvents();
+        xAxis->SetTexture(xTexture); // require each frame ?
+        zAxis->ProcessEvents();
+        zAxis->SetTexture(zTexture); // require each frame ?
         timer.WaitNextFrame();
     }
 
