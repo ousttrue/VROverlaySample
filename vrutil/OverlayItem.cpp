@@ -85,21 +85,11 @@ public:
 
     void Show() { m_overlay->ShowOverlay(m_overlayHandle); }
 
-    void AxisAnglePosition(const gsl::span<float> &axis, float angle,
-                           const gsl::span<float> &position)
+    void SetMatrix34(const float *matrix34)
     {
-        using namespace DirectX;
-        // todo: rotation
-        auto m = XMMatrixTranspose(
-            XMMatrixRotationAxis(XMLoadFloat3((XMFLOAT3 *)axis.data()), XMConvertToRadians(angle)));
-        XMFLOAT4X4 matrix44;
-        XMStoreFloat4x4(&matrix44, m);
-        matrix44._14 = position[0];
-        matrix44._24 = position[1];
-        matrix44._34 = position[2];
         m_overlay->SetOverlayTransformAbsolute(m_overlayHandle,
                                                vr::TrackingUniverseStanding,
-                                               (vr::HmdMatrix34_t *)&matrix44);
+                                               (vr::HmdMatrix34_t *)matrix34);
     }
 }; // namespace vrutil
 
@@ -133,10 +123,9 @@ void OverlayItem::SetOverlayWidthInMeters(float meter)
 
 void OverlayItem::Show() { m_impl->Show(); }
 
-void OverlayItem::AxisAnglePosition(const gsl::span<float> &axis, float angle,
-                                    const gsl::span<float> &position)
+void OverlayItem::SetMatrix34(const float *matrix34)
 {
-    m_impl->AxisAnglePosition(axis, angle, position);
+    m_impl->SetMatrix34(matrix34);
 }
 
 } // namespace vrutil

@@ -1,6 +1,7 @@
 #include <vrutil.h>
 #include <stdint.h>
 #include <iostream>
+#include <DirectXMath.h>
 
 class FpsTimer
 {
@@ -43,6 +44,17 @@ int main(int argc, char **argv)
     auto xTexture = d3d.CreateStaticTexture(2, 1, xPixels);
     xAxis->Show();
     xAxis->SetOverlayWidthInMeters(0.4f);
+    {
+        using namespace DirectX;
+        XMFLOAT3 axis{1, 0, 0};
+        auto rot =
+            XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(-90));
+        XMFLOAT3 pos{0, 0, 0};
+        auto translation = XMMatrixTranslationFromVector(XMLoadFloat3(&pos));
+        XMFLOAT4X4 matrix44;
+        XMStoreFloat4x4(&matrix44, XMMatrixMultiplyTranspose(rot, translation));
+        xAxis->SetMatrix34(&matrix44._11);
+    }
 
     auto zAxis = app.CreateOverlay("z_axis", "z_axis");
     uint8_t zPixels[] = {
@@ -52,11 +64,24 @@ int main(int argc, char **argv)
     auto zTexture = d3d.CreateStaticTexture(2, 1, zPixels);
     zAxis->Show();
     zAxis->SetOverlayWidthInMeters(0.4f);
+    {
+        using namespace DirectX;
+        XMFLOAT3 axis{1, 0, 0};
+        auto rot0 =
+            XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(-90));
+        
+        XMFLOAT3 yaxis{0, 1, 0};
+        auto rot1 = 
+            XMMatrixRotationAxis(XMLoadFloat3(&yaxis), XMConvertToRadians(90));
 
-    float axis[] = {0, 1, 0};
-    float position[] = {0, 0.1f, 0}; // 0.4f/2/2
-    xAxis->AxisAnglePosition(axis, 0, position);
-    zAxis->AxisAnglePosition(axis, 90, position);
+        auto rot = XMMatrixMultiply(rot0, rot1);
+
+        XMFLOAT3 pos{0, 0, 0};       
+        auto translation = XMMatrixTranslationFromVector(XMLoadFloat3(&pos));
+        XMFLOAT4X4 matrix44;
+        XMStoreFloat4x4(&matrix44, XMMatrixMultiplyTranspose(rot, translation));
+        zAxis->SetMatrix34(&matrix44._11);
+    }
 
     // main loop
     FpsTimer timer(80);

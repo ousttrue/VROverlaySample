@@ -19,7 +19,7 @@ public:
     void SetSharedHandle(void *handle);
     void SetOverlayWidthInMeters(float meter);
     void Show();
-    void AxisAnglePosition(const gsl::span<float> &axis, float angle, const gsl::span<float> &postion);
+    void SetMatrix34(const float *matrix34);
 };
 using OverlayItemPtr = std::shared_ptr<OverlayItem>;
 
