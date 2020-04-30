@@ -1,0 +1,10 @@
+{
+    "C_Cpp.clang_format_style": "file",
+    "cSpell.words": [
+        "vrutil"
+    ],
+    "files.associations": {
+        "span": "cpp",
+        "memory": "cpp"
+    }
+}
