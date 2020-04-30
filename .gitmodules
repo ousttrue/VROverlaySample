@@ -1,3 +1,6 @@
 [submodule "_externals/openvr"]
 	path = _externals/openvr
 	url = https://github.com/ValveSoftware/openvr.git
+[submodule "_externals/GSL"]
+	path = _externals/GSL
+	url = https://github.com/microsoft/GSL.git
